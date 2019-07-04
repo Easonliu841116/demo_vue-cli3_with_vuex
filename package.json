@@ -12,7 +12,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.6.5",
     "jquery": "^3.4.1",
-    "popper": "^1.0.1",
+    "popper.js": "^1.15.0",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-loading-overlay": "^3.2.0",
@@ -20,6 +20,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.9.0",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
     "@vue/cli-service": "^3.9.0",
