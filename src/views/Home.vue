@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="container main-content mb-3">
-      <Loading :active.sync="isLoading"></Loading>
       <div class="row">
         <div class="col-md-3">
           <!-- 左側選單 (List group) -->
@@ -74,10 +73,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      products: [],
       searchText: '',
-      categories: [],
-      isLoading: false,
     };
   },
   computed: {
@@ -91,17 +87,19 @@ export default {
       }
       return this.products;
     },
+    isLoading() {
+      return this.$store.state.isLoading;
+    },
+    products() {
+      return this.$store.state.products;
+    },
+    categories() {
+      return this.$store.state.categories;
+    },
   },
   methods: {
     getProducts() {
-      const vm = this;
-      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`;
-      vm.isLoading = true;
-      this.$http.get(url).then((response) => {
-        vm.products = response.data.products;
-        vm.getUnique();
-        vm.isLoading = false;
-      });
+      this.$store.dispatch('getProducts');
     },
     addtoCart(id, qty = 1) {
       const vm = this;

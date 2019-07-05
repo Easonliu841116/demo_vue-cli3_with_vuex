@@ -21,7 +21,7 @@
                 <template v-if="cart.carts.length">
                   <td class="align-middle text-center">
                     <a href="#" class="text-muted" @click.prevent="removeCart(item.id)">
-                      <i class="fa fa-trash-o" aria-hidden="true"></i>
+                      <i class="fas fa-trash" aria-hidden="true"></i>
                     </a>
                   </td>
                   <td class="align-middle">{{ item.product.title }}</td>
@@ -45,8 +45,6 @@
         </div>
       </div>
     </div>
-    <Loading :active.sync="isLoading"></Loading>
-    <router-view/>
     <footer class="bg-light text-muted py-5">
       <div class="container">
         <ul class="list-inline text-center">
@@ -77,33 +75,37 @@ export default {
       cart: {
         carts: [],
       },
-      isLoading: false,
     };
   },
   methods: {
     getCart() {
       const vm = this;
-      vm.isLoading = true;
+      this.$store.dispatch('updateLoading', true);
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
       this.$http.get(url).then((response) => {
         if (response.data.data.carts) {
           vm.cart = response.data.data;
         }
-        vm.isLoading = false;
+        this.$store.dispatch('updateLoading', false);
       });
     },
     removeCart(id) {
       const vm = this;
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`;
-      vm.isLoading = true;
+      this.$store.dispatch('updateLoading', true);
       this.$http.delete(url).then(() => {
-        vm.isLoading = false;
+        this.$store.dispatch('updateLoading', false);
         vm.getCart();
       });
     },
   },
   created() {
     this.getCart();
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    },
   },
 };
 </script>
