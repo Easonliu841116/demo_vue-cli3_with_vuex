@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
   name: 'Home',
   data() {
@@ -87,41 +89,16 @@ export default {
       }
       return this.products;
     },
-    isLoading() {
-      return this.$store.state.isLoading;
-    },
-    products() {
-      return this.$store.state.products;
-    },
-    categories() {
-      return this.$store.state.categories;
-    },
+    // 展開並取用 getters
+    ...mapGetters(['isLoading', 'categories', 'products']),
   },
   methods: {
-    getProducts() {
-      this.$store.dispatch('getProducts');
-    },
+    // 含參數的 funtion 必須使用 dispatch 的方式才能夠正確傳入參數
     addtoCart(id, qty = 1) {
-      const vm = this;
-      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-      vm.isLoading = true;
-      const item = {
-        product_id: id,
-        qty,
-      };
-      vm.isLoading = true;
-      this.$http.post(url, { data: item }).then(() => {
-        vm.isLoading = false;
-      });
+      this.$store.dispatch('addtoCart', { id, qty });
     },
-    getUnique() {
-      const vm = this;
-      const categories = new Set();
-      vm.products.forEach((item) => {
-        categories.add(item.category);
-      });
-      vm.categories = Array.from(categories);
-    },
+    // 展開並取用 productsModules 內的 actions
+    ...mapActions(['productsModules', 'getProducts']),
   },
   created() {
     this.getProducts();

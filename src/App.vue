@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <loading :active.sync="isLoading"></loading>
     <nav class="navbar navbar-light bg-light">
       <router-link class="navbar-brand" to="/">
         <i class="fa fa-heart text-info" aria-hidden="true"></i>
@@ -45,6 +46,7 @@
         </div>
       </div>
     </div>
+    <Home/>
     <footer class="bg-light text-muted py-5">
       <div class="container">
         <ul class="list-inline text-center">
@@ -68,44 +70,28 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import Home from './views/Home.vue';
+
 export default {
   name: 'App',
-  data() {
-    return {
-      cart: {
-        carts: [],
-      },
-    };
+  computed: {
+    // 展開並取用 getters
+    ...mapGetters(['isLoading', 'cart']),
   },
   methods: {
-    getCart() {
-      const vm = this;
-      this.$store.dispatch('updateLoading', true);
-      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-      this.$http.get(url).then((response) => {
-        if (response.data.data.carts) {
-          vm.cart = response.data.data;
-        }
-        this.$store.dispatch('updateLoading', false);
-      });
-    },
+    // 含參數的 funtion 必須使用 dispatch 的方式才能夠正確傳入參數
     removeCart(id) {
-      const vm = this;
-      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`;
-      this.$store.dispatch('updateLoading', true);
-      this.$http.delete(url).then(() => {
-        this.$store.dispatch('updateLoading', false);
-        vm.getCart();
-      });
+      this.$store.dispatch('removeCart', id);
     },
+    // 展開並取用 actions
+    ...mapActions(['getCart']),
   },
   created() {
     this.getCart();
   },
-  computed: {
-    isLoading() {
-      return this.$store.state.isLoading;
-    },
+  components: {
+    Home,
   },
 };
 </script>
